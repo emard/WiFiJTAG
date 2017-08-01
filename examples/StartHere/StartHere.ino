@@ -26,10 +26,11 @@ void loop() {
     /* add main program code here */
     static uint16_t last;
     uint16_t current = millis();
-    if(current - last > 1000)
+    if(current - last > 10000)
     {
       last = current;
       jtag.scan();
+      jtag.program("/bitstream.svf", 0);
     } 
 
     // DO NOT REMOVE. Attend OTA update from Arduino IDE
