@@ -3,7 +3,7 @@
 // 
 
 
-#include "FSWebServerLib.h"
+#include "WiFiJTAG.h"
 #include <StreamString.h>
 
 AsyncFSWebServer ESPHTTPServer(80);
@@ -96,6 +96,7 @@ void AsyncFSWebServer::begin(FS* fs) {
 
     if (AP_ENABLE_BUTTON >= 0) {
         _apConfig.APenable = !digitalRead(AP_ENABLE_BUTTON); // Read AP button. If button is pressed activate AP
+        // _apConfig.APenable = digitalRead(AP_ENABLE_BUTTON); // Read AP button. If button is NOT pressed activate AP
         DEBUGLOG("AP Enable = %d\n", _apConfig.APenable);
     }
 

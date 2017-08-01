@@ -21,7 +21,7 @@
 #include <ArduinoOTA.h>
 #include <ArduinoJson.h>
 
-#define RELEASE  // Comment to enable debug output
+// #define RELEASE  // Comment to enable debug output
 
 #define DBG_OUTPUT_PORT Serial
 
@@ -31,8 +31,8 @@
 #define DEBUGLOG(...)
 #endif
 
-#define CONNECTION_LED 2 // Connection LED pin (Built in). -1 to disable
-#define AP_ENABLE_BUTTON 4 // Button pin to enable AP during startup for configuration. -1 to disable
+#define CONNECTION_LED LED_BUILTIN // Connection LED pin (Built in). -1 to disable
+#define AP_ENABLE_BUTTON 16 // Button pin to enable AP during startup for configuration. -1 to disable
 
 
 #define CONFIG_FILE "/config.json"
