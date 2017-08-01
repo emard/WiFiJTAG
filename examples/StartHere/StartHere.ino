@@ -24,9 +24,10 @@ void setup() {
 
 void loop() {
     /* add main program code here */
-    static uint16_t last;
-    uint16_t current = millis();
-    if(current - last > 10000)
+    static int16_t last;
+    int16_t difftime, current = millis();
+    difftime = current-last;
+    if(difftime > 10000)
     {
       last = current;
       jtag.scan();
