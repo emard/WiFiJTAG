@@ -27,11 +27,11 @@ void loop() {
     static int16_t last;
     int16_t difftime, current = millis();
     difftime = current-last;
-    if(difftime > 10000)
+    if(difftime > 30000)
     {
-      last = current;
       jtag.scan();
-      jtag.program("/bitstream.svf", 0);
+      // jtag.program("/bitstream.svf", 0);
+      last = millis();
     } 
 
     // DO NOT REMOVE. Attend OTA update from Arduino IDE
