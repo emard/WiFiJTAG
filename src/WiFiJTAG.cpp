@@ -581,7 +581,6 @@ void AsyncFSWebServer::handleFileCreate(AsyncWebServerRequest *request) {
     else
         return request->send(500, "text/plain", "CREATE FAILED");
     request->send(200, "text/plain", "");
-    path = String(); // Remove? Useless statement?
 }
 
 void AsyncFSWebServer::handleFileDelete(AsyncWebServerRequest *request) {
@@ -916,6 +915,36 @@ void AsyncFSWebServer::send_NTP_configuration_html(AsyncWebServerRequest *reques
 
 }
 
+void AsyncFSWebServer::send_JTAG_configuration_html(AsyncWebServerRequest *request) {
+
+    if (!checkAuth(request))
+        return request->requestAuthentication();
+
+    if (request->args() > 0)  // Save Settings
+    {
+        for (uint8_t i = 0; i < request->args(); i++) {
+            if (request->argName(i) == "scan" && urldecode(request->arg(i)) == "scan") {
+                // _config.ntpServerName = urldecode(request->arg(i));
+                // NTP.setNtpServerName(_config.ntpServerName);
+                Serial.println("SCAN....");
+                jtag_scan = true;
+                continue;
+            }
+            if (request->argName(i) == "program" && urldecode(request->arg(i)) == "program") {
+                // _config.ntpServerName = urldecode(request->arg(i));
+                // NTP.setNtpServerName(_config.ntpServerName);
+                Serial.println("PROGRAM....");
+                jtag_program = true;
+                continue;
+            }
+        }
+    }
+    handleFileRead("/jtag.html", request);
+    DEBUGLOG(__PRETTY_FUNCTION__);
+    DEBUGLOG("\r\n");
+
+}
+
 void AsyncFSWebServer::restart_esp(AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", Page_Restart);
     DEBUGLOG(__FUNCTION__);
@@ -1184,11 +1213,6 @@ void AsyncFSWebServer::serverInit() {
             return request->requestAuthentication();
         this->send_general_configuration_html(request);
     });
-    on("/ntp.html", [this](AsyncWebServerRequest *request) {
-        if (!this->checkAuth(request))
-            return request->requestAuthentication();
-        this->send_NTP_configuration_html(request);
-    });
     on("/admin/restart", [this](AsyncWebServerRequest *request) {
         DBG_OUTPUT_PORT.println(request->url());
         if (!this->checkAuth(request))
@@ -1240,6 +1264,24 @@ void AsyncFSWebServer::serverInit() {
     }, [this](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
         this->updateFirmware(request, filename, index, data, len, final);
     });
+    #if 1
+    on("/jtag.html", [this](AsyncWebServerRequest *request) {
+        if (!this->checkAuth(request))
+            return request->requestAuthentication();
+        this->send_JTAG_configuration_html(request);
+    });
+    //create file
+    on("/jtag", HTTP_PUT, [this](AsyncWebServerRequest *request) {
+        if (!this->checkAuth(request))
+            return request->requestAuthentication();
+        this->handleFileCreate(request);
+    });
+    //first callback is called after the request has ended with all parsed arguments
+    //second callback handles file uploads at that location
+    on("/jtag", HTTP_POST, [](AsyncWebServerRequest *request) { request->send(200, "text/plain", ""); }, [this](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
+        this->handleFileUpload(request, filename, index, data, len, final);
+    });
+    #endif
 
 
     //called when the url is not defined here

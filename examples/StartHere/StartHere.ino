@@ -24,15 +24,34 @@ void setup() {
 
 void loop() {
     /* add main program code here */
+    static bool to_program = false;
     static int16_t last;
     int16_t difftime, current = millis();
     difftime = current-last;
-    if(difftime > 30000)
+    if(difftime > 5000 && to_program)
+    {
+      jtag.program("/bitstream.svf", 0);
+      Serial.println("DONE");
+      last = millis();
+      to_program = false;
+      ESPHTTPServer.jtag_program = false;
+    }
+    if(ESPHTTPServer.jtag_scan)
     {
       jtag.scan();
-      // jtag.program("/bitstream.svf", 0);
+      Serial.println("DONE");
+      ESPHTTPServer.jtag_scan = false;
+    }
+    if(to_program == false && ESPHTTPServer.jtag_program)
+    {
+      to_program = true; 
+      // this is to schedule programing after few seconds
+      // so web interface can finish accessing all its files.
+      // don't click to jtag's web interface during programming!
+      // web server and jtag programmer cannot access
+      // filesystem at the same time
       last = millis();
-    } 
+    }
 
     // DO NOT REMOVE. Attend OTA update from Arduino IDE
     ESPHTTPServer.handle();	
