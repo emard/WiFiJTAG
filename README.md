@@ -6,7 +6,7 @@ for my ESP8266 port of Clifford Wolf's Lib(X)SVF.
 It provides JTAG Programmer web page
     http://192.168.4.1/jtag.html
 
-Don't click around too much during programming.
+It's almost useable but don't click around too much during programming.
 Clicking first time on any of WiFiJTAG web pages
 will almost always lead to corrupt reading of bitstream.svf
 file and programming failure.
