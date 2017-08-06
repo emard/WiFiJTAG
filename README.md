@@ -3,8 +3,14 @@
 This is fork/adaptation of FSBrowserNG to work as Web interface
 for my ESP8266 port of Clifford Wolf's Lib(X)SVF.
 
-It provides JTAG Programmer web page
+It can act as wifi client or access point and
+provides JTAG Programmer web page like
     http://192.168.4.1/jtag.html
+
+ESP8266 SPI flash can hold about 2.7MB of svf file,
+but upload takes few minutes and often may fail inbetween.
+Until some cool upload progress bar is made, 
+watching traffic can be done with tcpdump :)
 
 It's almost useable but don't click around too much during programming.
 Clicking first time on any of WiFiJTAG web pages
