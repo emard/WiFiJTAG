@@ -1,3 +1,17 @@
+# WiFiJTAG
+
+This is fork/adaptation of FSBrowserNG to work as Web interface
+for my ESP8266 port of Clifford Wolf's Lib(X)SVF.
+
+It provides JTAG Programmer web page
+    http://192.168.4.1/jtag.html
+
+Don't click around too much during programming.
+Clicking first time on any of WiFiJTAG web pages
+will almost always lead to corrupt reading of bitstream.svf
+file and programming failure.
+Second time clicking seems to behave corretly, I don't know why.
+
 # FSBrowserNG
 Full autocontained (on SPIFFS) async web server on ESP8266. Written as a Library.
 
