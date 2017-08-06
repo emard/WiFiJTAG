@@ -19,6 +19,7 @@ void setup() {
     // WiFi is started inside library
     SPIFFS.begin(); // Not really needed, checked inside library and started if needed
     ESPHTTPServer.begin(&SPIFFS);
+    jtag.begin(&SPIFFS);
     /* add setup code here */
 }
 
@@ -28,27 +29,27 @@ void loop() {
     static int16_t last;
     int16_t difftime, current = millis();
     difftime = current-last;
-    if(difftime > 5000 && to_program)
+    if(difftime > 100 && to_program)
     {
       jtag.program("/bitstream.svf", 0);
-      Serial.println("DONE");
       last = millis();
       to_program = false;
       ESPHTTPServer.jtag_program = false;
     }
-    if(ESPHTTPServer.jtag_scan)
+    if(ESPHTTPServer.jtag_scan && to_program == false)
     {
       jtag.scan();
-      Serial.println("DONE");
+      ESPHTTPServer.jtag_idcode = jtag.id();
       ESPHTTPServer.jtag_scan = false;
     }
-    if(to_program == false && ESPHTTPServer.jtag_program)
+    if(ESPHTTPServer.jtag_program && to_program == false)
     {
       to_program = true; 
       // this is to schedule programing after few seconds
       // so web interface can finish accessing all its files.
-      // don't click to jtag's web interface during programming!
-      // web server and jtag programmer cannot access
+      // No locking mechanism is implemented yet so please
+      // don't click too much in jtag's web interface during programming!
+      // web server and jtag programmer sometimes cannot access
       // filesystem at the same time
       last = millis();
     }

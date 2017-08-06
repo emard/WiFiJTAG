@@ -43,7 +43,14 @@
 				<td>
 				<input type="text" id="localfile"
 				name="localfile" maxlength="172"
-				value="bitstream.svf"></td>
+				value="bitstream.svf" disabled></td>
+			</tr>
+			<tr>
+				<td align="right">IDCODE</td>
+				<td>
+				<input type="text" id="idcode"
+				name="idcode" maxlength="8"
+				value="" disabled></td>
 			</tr>
 			<tr>
 				<td colspan="1" align="center">
@@ -59,7 +66,7 @@
 </body>
 <script>
       function GetState() {
-          /* setValues("/update/updatepossible") */
+          setValues("/jtag_values")
           setTimeout(function () {
               if (document.getElementById("remupd").innerHTML == "OK") {
                   console.warn("ERROR = OK");

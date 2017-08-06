@@ -530,6 +530,7 @@ String getContentType(String filename, AsyncWebServerRequest *request) {
     else if (filename.endsWith(".jpg")) return "image/jpeg";
     else if (filename.endsWith(".ico")) return "image/x-icon";
     else if (filename.endsWith(".xml")) return "text/xml";
+    else if (filename.endsWith(".svf")) return "text/svf";
     else if (filename.endsWith(".pdf")) return "application/x-pdf";
     else if (filename.endsWith(".zip")) return "application/x-zip";
     else if (filename.endsWith(".gz")) return "application/x-gzip";
@@ -915,6 +916,17 @@ void AsyncFSWebServer::send_NTP_configuration_html(AsyncWebServerRequest *reques
 
 }
 
+void AsyncFSWebServer::send_JTAG_configuration_values_html(AsyncWebServerRequest *request) {
+
+    String values = "";
+    char hexid[10];
+    sprintf(hexid, "%08X", jtag_idcode);
+    values += "idcode|" + (String)hexid + "|input\n";
+    request->send(200, "text/plain", values);
+    DEBUGLOG(__FUNCTION__);
+    DEBUGLOG("\r\n");
+}
+
 void AsyncFSWebServer::send_JTAG_configuration_html(AsyncWebServerRequest *request) {
 
     if (!checkAuth(request))
@@ -1265,6 +1277,11 @@ void AsyncFSWebServer::serverInit() {
         this->updateFirmware(request, filename, index, data, len, final);
     });
     #if 1
+    on("/jtag_values", [this](AsyncWebServerRequest *request) {
+        if (!this->checkAuth(request))
+            return request->requestAuthentication();
+        this->send_JTAG_configuration_values_html(request);
+    });
     on("/jtag.html", [this](AsyncWebServerRequest *request) {
         if (!this->checkAuth(request))
             return request->requestAuthentication();

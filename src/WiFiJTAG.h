@@ -73,6 +73,7 @@ public:
     const char* getHostName();
     bool jtag_scan = false;
     bool jtag_program = false;
+    uint32_t jtag_idcode = 0;
 
 protected:
     strConfig _config; // General and WiFi configuration
@@ -131,6 +132,7 @@ protected:
     void send_update_firmware_values_html(AsyncWebServerRequest *request);
     void setUpdateMD5(AsyncWebServerRequest *request);
     void updateFirmware(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final);
+    void send_JTAG_configuration_values_html(AsyncWebServerRequest *request);
     void send_JTAG_configuration_html(AsyncWebServerRequest *request);
 
     static String urldecode(String input); // (based on https://code.google.com/p/avr-netino/)
